@@ -1,0 +1,290 @@
+<?php
+/*
+Plugin Name: Homepage-Banner
+Plugin URI: sig-ad.com
+Description: Adds a basic homepage banner with area for text.
+Author: Phillip Werner
+Author URI:
+License: GPLv2
+*/
+ require_once(ABSPATH . "wp-admin" . '/includes/image.php');
+ require_once(ABSPATH . "wp-admin" . '/includes/file.php');
+ require_once(ABSPATH . "wp-admin" . '/includes/media.php');
+
+/* CREATING THE NEW DATABASE TABLE */
+
+register_activation_hook( __FILE__, 'ch8bt_activation' );
+
+
+
+
+
+
+
+
+function ch8bt_activation() {
+// Get access to global database access class
+	global $wpdb;
+// Check to see if WordPress installation is a network
+	if ( is_multisite() ) {
+// If it is, cycle through all blogs, switch to them
+// and call function to create plugin table
+		if ( !empty( $_GET['networkwide'] ) ) {
+			$start_blog = $wpdb->blogid;
+			$blog_list =
+			$wpdb->get_col( 'SELECT blog_id FROM ' . $wpdb->blogs );
+			foreach ( $blog_list as $blog ) {
+				switch_to_blog( $blog );
+// Send blog table prefix to creation function
+				ch8bt_create_table( $wpdb->get_blog_prefix() );
+			}
+			switch_to_blog( $start_blog );
+			return;
+		}
+	}
+// Create table on main blog in network mode or single blog
+	ch8bt_create_table( $wpdb->get_blog_prefix() );
+
+// Register function to be called when new blogs are added
+// to a network site
+	add_action( 'wpmu_new_blog', 'ch8bt_new_network_site' );
+	function ch8bt_new_network_site( $blog_id ) {
+		global $wpdb;
+// Check if this plugin is active when new blog is created
+// Include plugin functions if it is
+		if ( !function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		}
+// Select current blog, create new table and switch back
+		if ( is_plugin_active_for_network( plugin_basename( __FILE__ ) ) ) {
+			$start_blog = $wpdb->blogid;
+			switch_to_blog( $blog_id );
+// Send blog table prefix to table creation function
+			ch8bt_create_table( $wpdb->get_blog_prefix() );
+			switch_to_blog( $start_blog );
+		}
+	}
+}
+
+
+function ch8bt_create_table( $prefix ) {
+// Prepare SQL query to create database table
+// using function parameter
+	$creation_query = 'CREATE TABLE IF NOT EXISTS ' .
+	$prefix . 'homepage_banners (
+		`banner_id` int(20) NOT NULL AUTO_INCREMENT,
+		`banner_image` text,
+		`banner_header_1` text,
+		`banner_header_2` text,
+		`banner_order` int(3) NOT NULL DEFAULT 0,
+		`banner_creation_date` date DEFAULT NULL,
+		PRIMARY KEY (`banner_id`)
+	);';
+	global $wpdb;
+	$wpdb->query( $creation_query );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+add_action( 'admin_menu', 'ch8bt_settings_menu' );
+
+
+function ch8bt_settings_menu() {
+	add_options_page( 'Homepage Banners',
+		'Bug Tracker',
+		'manage_options', 'homepage-banners',
+		'ch8bt_config_page' );
+}
+
+
+add_action( 'admin_init', 'ch8bt_admin_init' );
+
+
+function ch8bt_admin_init() {
+	add_action( 'admin_post_save_ch8bt_bug', 'process_ch8bt_bug' );
+}
+
+
+function process_ch8bt_bug() {
+	if ( !current_user_can( 'manage_options' ) ) {
+		wp_die( 'Not allowed' );
+	}
+// Check if nonce field is present for security
+	check_admin_referer( 'homepage-banners_add_edit' );
+	global $wpdb;
+// Place all user submitted values in an array (or empty
+// strings if no value was sent)
+	$new = wp_upload_bits($_FILES["banner_image"]["name"], null, file_get_contents($_FILES["banner_image"]["tmp_name"]));
+	$bug_data = array();
+	print_r($new);
+	$bug_data['banner_image'] = ( isset( $_POST['banner_image'] ) ?
+		$new : '' );
+	$bug_data['banner_header_1'] =
+	( isset( $_POST['banner_header_1'] ) ?
+		sanitize_text_field( $_POST['banner_header_1'] ) : '' );
+	$bug_data['banner_header_2'] =
+	( isset( $_POST['banner_header_2'] ) ?
+		sanitize_text_field( $_POST['banner_header_2'] ) : '' );
+	$bug_data['banner_order'] = ( isset( $_POST['banner_order'] ) ?
+		sanitize_text_field( $_POST['banner_order'] ) : '' );
+// Call the wpdb insert or update method based on value
+// of hidden bug_id field
+	if ( isset( $_POST['banner_id'] ) && 0 == $_POST['banner_id'] ) {
+		$wpdb->insert( $wpdb->get_blog_prefix() . 'homepage_banners',
+			$bug_data );
+	} elseif ( isset( $_POST['banner_id'] ) &&
+		$_POST['banner_id'] > 0 ) {
+		$wpdb->update( $wpdb->get_blog_prefix() . 'homepage_banners',
+			$bug_data,
+			array( 'banner_id' => intval( $_POST['banner_id'] ) ) );
+	}
+// Redirect the page to the user submission form
+	wp_redirect( add_query_arg( 'page', 'homepage-banners',
+		admin_url( 'options-general.php' ) ) );
+	exit;
+}
+
+
+function ch8bt_config_page() {
+	global $wpdb;
+	?>
+	<!-- Top-level menu -->
+	<div id="ch8bt-general" class="wrap">
+		<h2>Bug Tracker <a class="add-new-h2" href="<?php echo
+		add_query_arg( array( 'page' => 'homepage-banners',
+			'id' => 'new' ),
+			admin_url('options-general.php') ); ?>">
+		Add New Bug</a></h2>
+		<!-- Display bug list if no parameter sent in URL -->
+		<?php if ( empty( $_GET['id'] ) ) {
+			$bug_query = 'select * from ' . $wpdb->get_blog_prefix();
+			$bug_query .= 'homepage_banners ORDER by banner_order ASC';
+			$bug_items = $wpdb->get_results( $bug_query, ARRAY_A );
+			?>
+			<h3>Manage Bug Entries</h3>
+			<table class="wp-list-table widefat fixed">
+				<thead><tr><th style="width: 80px">ID</th>
+					<th style="width: 300px">Image</th>
+					<th style="width: 300px">Header 1</th>
+					<th style="width: 300px">Header 2</th>
+					<th>Order</th></tr></thead>
+					<?php
+// Display bugs if query returned results
+					if ( $bug_items ) {
+						foreach ( $bug_items as $bug_item ) {
+							echo '<tr style="background: #FFF">';
+							echo '<td>' . $bug_item['banner_id'] . '</td>';
+							echo '<td><a href="';
+							echo add_query_arg( array(
+								'page' => 'homepage-banners',
+								'id' => $bug_item['banner_id'] ),
+							admin_url( 'options-general.php' ) );
+							echo '"><img src=' . esc_url($bug_item['banner_image']) . ' width="100%" height="100%" /></a></td>';
+							echo '<td>' . $bug_item['banner_header_1'] . '</td>';
+							echo '<td>' . $bug_item['banner_header_2'] . '</td>';
+							echo '<td>' . $bug_item['banner_order'];
+							echo '</td></tr>';
+							
+						}
+					} else {
+						echo '<tr style="background: #FFF">';
+						echo '<td colspan="3">No Bug Found</td></tr>';
+					}
+					?>
+
+				</table><br />
+				<?php } elseif ( isset( $_GET['id'] ) &&
+					( 'new' == $_GET['id'] ||
+						is_numeric( $_GET['id'] ) ) ) {
+					$bug_id = intval( $_GET['id'] );
+					$mode = 'new';
+// Query database if numeric id is present
+					if ( $bug_id > 0 ) {
+						$bug_query = 'select * from ' . $wpdb->get_blog_prefix();
+						$bug_query .= 'homepage_banners where banner_id = %d';
+						$bug_data =
+						$wpdb->get_row( $wpdb->prepare( $bug_query, $bug_id ),
+							ARRAY_A );
+// Set variable to indicate page mode
+						if ( $bug_data ) {
+							$mode = 'edit';
+						}
+					}
+					if ( 'new' == $mode ) {
+						$bug_data = array(
+							'banner_image' => '', 'banner_header_1' => '',
+							'banner_header_2' => '', 'banner_order' => ''
+						);
+					}
+// Display title based on current mode
+					if ( 'new' == $mode ) {
+						echo '<h3>Add New Banner</h3>';
+					} elseif ( 'edit' == $mode ) {
+						echo '<h3>Edit Banner #' . $bug_data['banner_id'] . ' - ';
+						echo $bug_data['banner_image'] . '</h3>';
+					}
+					?>
+					<form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>">
+						<input type="hidden" name="action" value="save_ch8bt_bug" />
+						<input type="hidden" name="banner_id"
+						value="<?php echo $bug_id; ?>" />
+						<!-- Adding security through hidden referrer field -->
+						<?php wp_nonce_field( 'homepage-banners_add_edit' ); ?>
+						<!-- Display bug editing form -->
+						<table>
+							<tr>
+								<td style="width: 150px">Image</td>
+								<td><input name="banner_image" type="file" /></td>
+									</tr>
+									<tr>
+										<td>Header 1</td>
+										<td><textarea name="banner_header_1"
+											cols="60"><?php echo
+											esc_textarea( $bug_data['banner_header_1'] ); ?></textarea></td>
+										</tr>
+										<tr>
+										<td>Header 2</td>
+										<td><textarea name="banner_header_2"
+											cols="60"><?php echo
+											esc_textarea( $bug_data['banner_header_2'] ); ?></textarea></td>
+										</tr>
+										<tr>
+											<td>Version</td>
+											<td><input type="text" name="banner_order"
+												value="<?php echo esc_html(
+													$bug_data['banner_order'] ); ?>" /></td>
+												</tr>
+												<tr>
+													<td>Status</td>
+													<td>
+														<!-- <select name="bug_status">
+															 <?php
+// Display drop-down list of bug statuses
+// 															$bug_statuses = array( 0 => 'Open', 1 => 'Closed',
+// 																2 => 'Not-a-Bug' );
+// 															foreach( $bug_statuses as $status_id => $status ) {
+// // Add selected tag when entry matches
+// 																echo '<option value="' . $status_id . '" ';
+// 																selected( $bug_data['bug_status'],
+// 																	$status_id );
+// 																echo '>' . $status;
+// 															}?>
+															<!--  
+														</select> -->
+													</td>
+												</tr>
+											</table>
+											<input type="submit" value="Submit" class="button-primary" />
+										</form> 
+									</div>
+									<?php }
+								}

@@ -6,3 +6,18 @@ background-color: #ff4d4d;
 color: #fff;
 padding-left: 10px;
 }
+.add-new-banner{
+	display: inline-block;
+  padding: 12px 12px;
+  border-radius: 6px;
+  border: 0;
+  font-weight: bold;
+  letter-spacing: 0.0625em;
+  text-transform: uppercase;
+  background: #46b450;
+  color: #fff;
+}
+.add-new-banner:hover{
+	 background: #b7b6cd;
+  color: #fff;
+}
