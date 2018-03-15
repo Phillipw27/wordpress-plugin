@@ -48,7 +48,7 @@ function ch8bt_activation() {
 // Register function to be called when new blogs are added
 // to a network site
 	add_action( 'wpmu_new_blog', 'ch8bt_new_network_site' );
-	function ch8bt_new_network_site( $blog_id ) {
+function ch8bt_new_network_site( $blog_id ) {
 		global $wpdb;
 // Check if this plugin is active when new blog is created
 // Include plugin functions if it is
@@ -100,7 +100,7 @@ add_action( 'admin_menu', 'ch8bt_settings_menu' );
 
 function ch8bt_settings_menu() {
 	add_options_page( 'Homepage Banners',
-		'Bug Tracker',
+		'Homepage Banner',
 		'manage_options', 'homepage-banners',
 		'ch8bt_config_page' );
 }
@@ -121,13 +121,25 @@ function process_ch8bt_bug() {
 // Check if nonce field is present for security
 	check_admin_referer( 'homepage-banners_add_edit' );
 	global $wpdb;
+	// $upload_overrides = array( 'test_form' => false );
+	// $movefile = wp_handle_upload(file_get_contents($_FILES["banner_image"]["name"]), $upload_overrides);
+	$upload_return = wp_upload_bits(
+					$_FILES['banner_image']['name'], null,
+					file_get_contents(
+						$_FILES['banner_image']['tmp_name'] ) );
 // Place all user submitted values in an array (or empty
 // strings if no value was sent)
-	$new = wp_upload_bits($_FILES["banner_image"]["name"], null, file_get_contents($_FILES["banner_image"]["tmp_name"]));
+	// $new = wp_upload_bits($_FILES["banner_image"]["name"], null, file_get_contents($_FILES["banner_image"]["tmp_name"]));
+	$arr_file_type = wp_check_filetype(basename($_FILES["banner_image"]["name"]));
+	$uploaded_file_type = $arr_file_type['type'];
+	 // Set an array containing a list of acceptable formats
+                    $allowed_file_types = array('image/jpg','image/jpeg','image/gif','image/png');
+                   print_r($upload_return['url']);
+
+	
 	$bug_data = array();
-	print_r($new);
-	$bug_data['banner_image'] = ( isset( $_POST['banner_image'] ) ?
-		$new : '' );
+	
+	$bug_data['banner_image'] = $upload_return['url'];
 	$bug_data['banner_header_1'] =
 	( isset( $_POST['banner_header_1'] ) ?
 		sanitize_text_field( $_POST['banner_header_1'] ) : '' );
@@ -147,7 +159,7 @@ function process_ch8bt_bug() {
 			$bug_data,
 			array( 'banner_id' => intval( $_POST['banner_id'] ) ) );
 	}
-// Redirect the page to the user submission form
+//Redirect the page to the user submission form
 	wp_redirect( add_query_arg( 'page', 'homepage-banners',
 		admin_url( 'options-general.php' ) ) );
 	exit;
@@ -159,18 +171,18 @@ function ch8bt_config_page() {
 	?>
 	<!-- Top-level menu -->
 	<div id="ch8bt-general" class="wrap">
-		<h2>Bug Tracker <a class="add-new-h2" href="<?php echo
+		<h2>Homepage Banner <a class="add-new-h2" href="<?php echo
 		add_query_arg( array( 'page' => 'homepage-banners',
 			'id' => 'new' ),
 			admin_url('options-general.php') ); ?>">
-		Add New Bug</a></h2>
+		Add New Banner</a></h2>
 		<!-- Display bug list if no parameter sent in URL -->
 		<?php if ( empty( $_GET['id'] ) ) {
 			$bug_query = 'select * from ' . $wpdb->get_blog_prefix();
 			$bug_query .= 'homepage_banners ORDER by banner_order ASC';
 			$bug_items = $wpdb->get_results( $bug_query, ARRAY_A );
 			?>
-			<h3>Manage Bug Entries</h3>
+			<h3>Manage Banners</h3>
 			<table class="wp-list-table widefat fixed">
 				<thead><tr><th style="width: 80px">ID</th>
 					<th style="width: 300px">Image</th>
@@ -197,7 +209,7 @@ function ch8bt_config_page() {
 						}
 					} else {
 						echo '<tr style="background: #FFF">';
-						echo '<td colspan="3">No Bug Found</td></tr>';
+						echo '<td colspan="3">No Banners Found</td></tr>';
 					}
 					?>
 
@@ -233,7 +245,8 @@ function ch8bt_config_page() {
 						echo $bug_data['banner_image'] . '</h3>';
 					}
 					?>
-					<form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>">
+					<form method="post" action="<?php echo admin_url( 'admin-post.php' ); ?>"
+						enctype="multipart/form-data">
 						<input type="hidden" name="action" value="save_ch8bt_bug" />
 						<input type="hidden" name="banner_id"
 						value="<?php echo $bug_id; ?>" />
@@ -288,3 +301,29 @@ function ch8bt_config_page() {
 									</div>
 									<?php }
 								}
+
+
+
+
+add_shortcode('home_banner', 'home_banner_shortcode');
+
+function home_banner_shortcode($atts, $content = null){
+	$output;
+	global $wpdb;
+	$bug_query = 'select * from ' . $wpdb->get_blog_prefix();
+			$bug_query .= 'homepage_banners ORDER by banner_order ASC';
+			$bug_items = $wpdb->get_results( $bug_query, ARRAY_A );
+			$output = '<ul>';
+	foreach($bug_items as $items){
+		
+		$output .= '<li>';
+		$output .= '<div class="header_1">' . $items->banner_header_1 .'</div>';
+		$output .= '<div class="header_2">' . $items->banner_header_2 .'</div>';
+		$output .= '<img src="'. $items['banner_image'].'" />';
+		$output .= '</li>';
+	
+	}
+		$output .= '</ul>';
+
+		return $output;
+}
