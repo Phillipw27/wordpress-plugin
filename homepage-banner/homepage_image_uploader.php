@@ -15,10 +15,15 @@ License: GPLv2
 
 register_activation_hook( __FILE__, 'ch8bt_activation' );
 
+wp_enqueue_script("jquery");
 
+add_action('wp_enqueue_scripts', 'homepage_banner_stylesheet');
 
+function homepage_banner_stylesheet(){
+	wp_enqueue_style('privatestylesheet', plugins_url('home-banner-stylesheet.css', __FILE__));
 
-
+	wp_enqueue_script('privatescript', plugins_url('scripts.js', __FILE__));
+}
 
 
 
@@ -146,6 +151,8 @@ function process_ch8bt_bug() {
 	$bug_data['banner_header_2'] =
 	( isset( $_POST['banner_header_2'] ) ?
 		sanitize_text_field( $_POST['banner_header_2'] ) : '' );
+	$bug_data['button_link'] = ( isset( $_POST['button_link'] ) ?
+		sanitize_text_field( $_POST['button_link'] ) : '' );
 	$bug_data['banner_order'] = ( isset( $_POST['banner_order'] ) ?
 		sanitize_text_field( $_POST['banner_order'] ) : '' );
 // Call the wpdb insert or update method based on value
@@ -187,7 +194,8 @@ function ch8bt_config_page() {
 				<thead><tr><th style="width: 80px">ID</th>
 					<th style="width: 300px">Image</th>
 					<th style="width: 300px">Header 1</th>
-					<th style="width: 300px">Header 2</th>
+					<th style="width: 300px">Button</th>
+					<th>Link</th>
 					<th>Order</th></tr></thead>
 					<?php
 // Display bugs if query returned results
@@ -200,9 +208,10 @@ function ch8bt_config_page() {
 								'page' => 'homepage-banners',
 								'id' => $bug_item['banner_id'] ),
 							admin_url( 'options-general.php' ) );
-							echo '"><img src=' . esc_url($bug_item['banner_image']) . ' width="100%" height="100%" /></a></td>';
+							echo '"><img src=' . esc_url($bug_item['banner_image']) . ' width="200px" height="auto" /></a></td>';
 							echo '<td>' . $bug_item['banner_header_1'] . '</td>';
 							echo '<td>' . $bug_item['banner_header_2'] . '</td>';
+							echo '<td>' . $bug_item['button_link'] . '</td>';
 							echo '<td>' . $bug_item['banner_order'];
 							echo '</td></tr>';
 							
@@ -265,13 +274,19 @@ function ch8bt_config_page() {
 											esc_textarea( $bug_data['banner_header_1'] ); ?></textarea></td>
 										</tr>
 										<tr>
-										<td>Header 2</td>
+										<td>Button</td>
 										<td><textarea name="banner_header_2"
 											cols="60"><?php echo
 											esc_textarea( $bug_data['banner_header_2'] ); ?></textarea></td>
 										</tr>
 										<tr>
-											<td>Version</td>
+										<td>Button Link</td>
+										<td><textarea name="button_link"
+											cols="60"><?php echo
+											esc_textarea( $bug_data['button_link'] ); ?></textarea></td>
+										</tr>
+										<tr>
+											<td>Order</td>
 											<td><input type="text" name="banner_order"
 												value="<?php echo esc_html(
 													$bug_data['banner_order'] ); ?>" /></td>
@@ -308,22 +323,32 @@ function ch8bt_config_page() {
 add_shortcode('home_banner', 'home_banner_shortcode');
 
 function home_banner_shortcode($atts, $content = null){
+	$count = 0;
 	$output;
 	global $wpdb;
 	$bug_query = 'select * from ' . $wpdb->get_blog_prefix();
 			$bug_query .= 'homepage_banners ORDER by banner_order ASC';
 			$bug_items = $wpdb->get_results( $bug_query, ARRAY_A );
-			$output = '<ul>';
+			$output = '<section class="demo">
+  <button class="next">Next</button>
+  <button class="prev">Previous</button>
+<div class="homebanner">';
 	foreach($bug_items as $items){
+		$count++;
+		if($count == 1){
+			$output .= '<div class="banner" style="display:inline-block">';
+		}
+		else{
+			$output .= '<div class="banner">';
+		}
 		
-		$output .= '<li>';
-		$output .= '<div class="header_1">' . $items->banner_header_1 .'</div>';
-		$output .= '<div class="header_2">' . $items->banner_header_2 .'</div>';
+		$output .= '<div class="homebanner-cover"></div>';
+		$output .= '<div class="home_header_1">'. $items['banner_header_1'].'</div><button class="home_header_2">'.$items['banner_header_2'].'</button>';
 		$output .= '<img src="'. $items['banner_image'].'" />';
-		$output .= '</li>';
+		$output .= '</div>';
 	
 	}
-		$output .= '</ul>';
+		$output .= '</div></section>';
 
 		return $output;
 }

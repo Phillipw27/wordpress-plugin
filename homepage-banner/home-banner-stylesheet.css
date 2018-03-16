@@ -1,0 +1,98 @@
+.private {
+color: #6E6A6B;
+}
+.register {
+background-color: #ff4d4d;
+color: #fff;
+padding-left: 10px;
+}
+.add-new-banner{
+	display: inline-block;
+  padding: 12px 12px;
+  border-radius: 6px;
+  border: 0;
+  font-weight: bold;
+  letter-spacing: 0.0625em;
+  text-transform: uppercase;
+  background: #46b450;
+  color: #fff;
+}
+.add-new-banner:hover{
+	 background: #b7b6cd;
+  color: #fff;
+}
+.homebanner {
+  max-width: 100%;
+  background-color: black;
+  height: 700px;
+  overflow: hidden;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  background-image: 50% 50%;
+}
+.homebanner .banner {
+  background-color: white;
+  width: 100%;
+  image-position: 100% 100%;
+  display: inline-block;
+  display: none;
+}
+.homebanner img {
+  width: 100%;
+  height: auto;
+  background-position: 50% 50%;
+}
+
+button {
+  position: absolute;
+}
+
+.next {
+  right: 5px;
+}
+
+.prev {
+  left: 5px;
+}
+
+.banner > .homebanner-cover{
+  position: absolute;
+  background: black;
+  opacity: .6;
+  width: 40%;
+  height: 100%;
+}
+
+.home_header_1{
+  position: absolute;
+  color: white;
+  font-size: 65px;
+  bottom: 50%;
+  line-height: 90px;
+  width: 30%;
+  border-top: 3px solid white;
+  border-bottom: 3px solid white;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+button.home_header_2{
+  position: absolute;
+  bottom: 35%;
+  border-radius: 0 !important;
+  background-color: #49308d;
+  border: 1px solid black;
+  color: white;
+  font-size: 25px;
+  padding: 5px;
+  width: 20%;
+  margin-left: 10%;
+  margin-right: 10%;
+  cursor: pointer;
+}
+
+button.home_header_2:hover{
+  background-color:#726694;
+  cursor: pointer;
+}

@@ -1,0 +1,36 @@
+
+.cover-page{
+ position: absolute;
+ width: 800px;
+ height: 200px;
+ background: #000;
+ opacity: .4;
+ bottom: 100px;
+ right: 50%;
+}
+
+.header_1{
+	font-size: 60px;
+	color: white;
+	text-align:center;
+	line-height: 120px;
+}
+
+.header_1_lone{
+	font-size: 60px;
+	color: white;
+	text-align:center;
+	line-height: 180px;
+}
+
+.header_2{
+	font-size:45px;
+	color: white;
+	text-align:center;
+	vertical-align: middle;
+}
+
+.file_attachment{
+	height: 700px;
+	overflow: hidden;
+}

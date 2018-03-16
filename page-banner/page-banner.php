@@ -9,6 +9,11 @@ Author URI:
 License: GPLv2
 */
 
+add_action('wp_enqueue_scripts', 'page_banner_stylesheet');
+
+function page_banner_stylesheet(){
+	wp_enqueue_style('privatepagestylesheet', plugins_url('page-banner-styles.css', __FILE__));
+}
 
 add_action( 'post_edit_form_tag', 'ch5_cfu_form_add_enctype' );
 
@@ -41,11 +46,11 @@ true ) );
 		<td style="width: 150px">Banner Image</td>
 		<td>
 			<?php
-// Retrieve attachment data for post
+		// Retrieve attachment data for post
 			$attachment_data = get_post_meta( $post->ID,
 				'attach_data',
 				true );
-// Display post link if data is present
+		// Display post link if data is present
 			if ( empty ( $attachment_data ) ) {
 				echo 'No Attachment Present';
 			} else {
@@ -154,9 +159,10 @@ true ) );
 	}
 }
 }
-add_filter( 'the_content', 'displayBanner' );
 
-function displayBanner ( $content ) {
+add_shortcode('page-banner', 'displayBanner');
+
+function displayBanner () {
 	$post_id = get_the_ID();
 	if ( !empty( $post_id ) ) {
 		if ( 'post' == get_post_type( $post_id ) ||
@@ -165,14 +171,22 @@ function displayBanner ( $content ) {
 		$post_source_header1 = get_post_meta($post_id, 'post_source_header1', true);
 		$post_source_header2 = get_post_meta($post_id, 'post_source_header2', true);
 		if ( !empty( $attachment_data ) ) {
-			$image = '<div class="file_attachment"><div class="cover">'.$post_source_header1 . $post_source_header2.'</div>';
-			$image .= '<img src="';
+			if($post_sorce_header2){
+			$image = '<div class="file_attachment"><div class="cover-page"><div class="header_1"> '.$post_source_header1 . '</div>';
+			$image .= '<div class="header_2"> '.$post_source_header2 . '</div>';
+		}
+		else if($post_source_header1){
+			$image = '<div class="file_attachment"><div class="cover-page"><div class="header_1_lone"> '.$post_source_header1 . '</div>';
+		}
+			$image .= '</div><img src="';
 			$image .= esc_url( $attachment_data['url'] );
 			$image .= '" width="100%" />' ;
-			$image .= '</div>';
-			$content = $image . $content;
+			$image .= '</div></div>';
+			
 		}
 	}
 }
-return $content;
+return $image;
 }
+
+
