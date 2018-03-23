@@ -1,0 +1,30 @@
+.vimeography-playlister {
+
+  position: relative;
+
+  .vimeography-player-container {
+    width: 55%;
+    float: left;
+  }
+
+  .vimeography-thumbnails {
+    width: 45%;
+    position: absolute;
+    max-height: 100%;
+    bottom: 0;
+    top: 0;
+    right: 0;
+    overflow-x: hidden;
+  }
+
+  .vimeography-thumbnail {
+    figcaption {
+      width: 60%;
+    }
+
+    img {
+      max-width: 30%;
+    }
+  }
+
+}

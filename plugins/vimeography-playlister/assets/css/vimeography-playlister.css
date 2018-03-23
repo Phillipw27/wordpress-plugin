@@ -1,0 +1,107 @@
+/* Any theme specific CSS declarations can be written here. */
+.vimeography-playlister, .vimeography-playlister .vimeography-thumbnail, .vimeography-playlister .vimeography-thumbnail a {
+  *zoom: 1; }
+  .vimeography-playlister:before, .vimeography-playlister .vimeography-thumbnail:before, .vimeography-playlister .vimeography-thumbnail a:before, .vimeography-playlister:after, .vimeography-playlister .vimeography-thumbnail:after, .vimeography-playlister .vimeography-thumbnail a:after {
+    content: "";
+    display: table; }
+  .vimeography-playlister:after, .vimeography-playlister .vimeography-thumbnail:after, .vimeography-playlister .vimeography-thumbnail a:after {
+    clear: both; }
+
+.vimeography-playlister .vimeography-thumbnail a, .vimeography-playlister .vimeography-thumbnail figcaption h1, .vimeography-playlister .vimeography-thumbnail figcaption p {
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  -ms-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out; }
+
+.vimeography-playlister *, .vimeography-playlister *:after, .vimeography-playlister *:before {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box; }
+
+.vimeography-playlister .video-wrapper {
+  position: relative;
+  height: 0;
+  padding-bottom: 56.25%;
+  /* 16:9 Aspect Ratio */ }
+.vimeography-playlister .video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; }
+
+.vimeography-playlister {
+  box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.4); }
+  .vimeography-playlister .vimeography-player-container {
+    width: 100%; }
+  .vimeography-playlister .vimeography-thumbnails {
+    max-height: 240px;
+    overflow-y: auto;
+    background-color: #444; }
+  .vimeography-playlister .vimeography-thumbnail {
+    width: 100%;
+    margin: 0;
+    border-bottom: 1px solid #333;
+    outline: 0; }
+    .vimeography-playlister .vimeography-thumbnail.vimeography-active a {
+      background-color: #555;
+      outline: 0; }
+      .vimeography-playlister .vimeography-thumbnail.vimeography-active a h1 {
+        color: #fff; }
+      .vimeography-playlister .vimeography-thumbnail.vimeography-active a p {
+        color: #ddd; }
+    .vimeography-playlister .vimeography-thumbnail a {
+      display: block;
+      outline: 0;
+      padding: 10px;
+      background-color: #444; }
+      .vimeography-playlister .vimeography-thumbnail a:hover, .vimeography-playlister .vimeography-thumbnail a:active {
+        background-color: #555;
+        outline: 0; }
+        .vimeography-playlister .vimeography-thumbnail a:hover h1, .vimeography-playlister .vimeography-thumbnail a:active h1 {
+          color: #fff; }
+        .vimeography-playlister .vimeography-thumbnail a:hover p, .vimeography-playlister .vimeography-thumbnail a:active p {
+          color: #ddd; }
+    .vimeography-playlister .vimeography-thumbnail figcaption {
+      float: left;
+      padding: 0 0 0 10px;
+      width: 80%; }
+      .vimeography-playlister .vimeography-thumbnail figcaption h1 {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.1em;
+        margin: 0;
+        padding: 5px 0;
+        color: #ddd; }
+      .vimeography-playlister .vimeography-thumbnail figcaption p {
+        font-size: 11px;
+        line-height: 1.2em;
+        margin: 0;
+        padding: 0;
+        color: #bbb; }
+    .vimeography-playlister .vimeography-thumbnail img {
+      float: left;
+      display: block;
+      max-width: 20%;
+      width: 100%; }
+
+@media only screen and (min-width: 940px) {
+  .vimeography-playlister {
+    position: relative; }
+    .vimeography-playlister .vimeography-player-container {
+      width: 55%;
+      float: left; }
+    .vimeography-playlister .vimeography-thumbnails {
+      width: 45%;
+      position: absolute;
+      max-height: 100%;
+      bottom: 0;
+      top: 0;
+      right: 0;
+      overflow-x: hidden; }
+    .vimeography-playlister .vimeography-thumbnail figcaption {
+      width: 60%; }
+    .vimeography-playlister .vimeography-thumbnail img {
+      max-width: 30%; } }
+

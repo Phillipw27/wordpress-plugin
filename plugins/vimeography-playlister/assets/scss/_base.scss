@@ -1,0 +1,97 @@
+.vimeography-playlister {
+
+  @extend %group;
+  @extend %border-box;
+  @extend %fitvids;
+
+  box-shadow: 0px 1px 5px rgba(0,0,0,.4);
+
+  .vimeography-player-container {
+    width: 100%;
+  }
+
+  .vimeography-thumbnails {
+    max-height: 240px;
+    overflow-y: auto;
+    background-color: #444;
+  }
+
+  .vimeography-thumbnail {
+    @extend %group;
+    width: 100%;
+    margin: 0;
+    border-bottom: 1px solid #333;
+    outline: 0;
+
+    &.vimeography-active {
+      a {
+        background-color: #555;
+        outline: 0;
+
+        h1 {
+          color: #fff;
+        }
+
+        p {
+          color: #ddd;
+        }
+      }
+    }
+
+    a {
+      display: block;
+      outline: 0;
+      @extend %group;
+      @extend %transition;
+      padding: 10px;
+      background-color: #444;
+
+      &:hover, &:active {
+        background-color: #555;
+        outline: 0;
+
+        h1 {
+          color: #fff;
+        }
+
+        p {
+          color: #ddd;
+        }
+      }
+    }
+
+    figcaption {
+      float: left;
+      padding: 0 0 0 10px;
+      width: 80%;
+
+      h1 {
+        @extend %transition;
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.1em;
+        margin: 0;
+        padding: 5px 0;
+        color: #ddd;
+      }
+
+      p {
+        @extend %transition;
+        font-size: 11px;
+        line-height: 1.2em;
+        margin: 0;
+        padding: 0;
+        color: #bbb;
+      }
+
+    }
+
+    img {
+      float: left;
+      display: block;
+      max-width: 20%;
+      width: 100%;
+    }
+  }
+
+}

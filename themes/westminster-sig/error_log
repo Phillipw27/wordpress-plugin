@@ -1,0 +1,17 @@
+[11-Jun-2016 07:31:23 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/404.php on line 8
+[14-Jun-2016 17:16:15 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/index.php on line 14
+[14-Jun-2016 21:15:47 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/index.php on line 14
+[06-Jul-2016 00:04:52 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/404.php on line 8
+[07-Jul-2016 21:11:46 UTC] PHP Fatal error:  Call to undefined function add_action() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/functions.php on line 79
+[26-Jul-2016 11:13:54 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/404.php on line 8
+[26-Jul-2016 11:14:09 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/404.php on line 8
+[28-Jul-2016 12:16:47 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/404.php on line 8
+[02-Aug-2016 09:42:52 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/archive.php on line 10
+[02-Aug-2016 09:57:39 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/archive.php on line 10
+[03-Aug-2016 09:17:33 UTC] PHP Fatal error:  Call to undefined function add_action() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/functions.php on line 79
+[05-Aug-2016 22:42:15 UTC] PHP Fatal error:  Call to undefined function add_action() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/functions.php on line 79
+[07-Aug-2016 20:48:30 UTC] PHP Fatal error:  Call to undefined function language_attributes() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/header.php on line 10
+[07-Aug-2016 20:48:32 UTC] PHP Fatal error:  Call to undefined function dynamic_sidebar() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/footer.php on line 13
+[07-Aug-2016 20:48:34 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/404.php on line 8
+[10-Aug-2016 18:11:10 UTC] PHP Fatal error:  Call to undefined function add_action() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/functions.php on line 79
+[06-Sep-2016 17:04:37 UTC] PHP Fatal error:  Call to undefined function get_header() in /home/westminsteradmin/public_html/wp-content/themes/westminster-sig/index.php on line 14

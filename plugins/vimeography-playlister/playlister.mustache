@@ -1,0 +1,16 @@
+<div id="vimeography-gallery-{{gallery_id}}" class="vimeography-playlister" data-version="{{version}}"{{#gallery_width}} style="max-width: {{gallery_width}};"{{/gallery_width}}>
+
+  {{#featured}}
+    <div class="vimeography-player-container">
+      <div class="vimeography-player">
+        <div class="video-wrapper">
+          {{{oembed}}}
+        </div>
+      </div>
+    </div>
+  {{/featured}}
+
+  <div class="vimeography-thumbnails">
+    {{>videos}}
+  </div>
+</div>
